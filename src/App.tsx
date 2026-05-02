@@ -326,7 +326,7 @@ function App() {
                 </div>
 
                 <button type="submit" className="evaluate-button">
-                  Canonicalize
+                  Decode
                 </button>
 
                 <div className="result-field">
