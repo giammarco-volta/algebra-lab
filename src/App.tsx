@@ -79,8 +79,7 @@ function App() {
               <p>
                 We subtract notes to obtain intervals, add intervals to notes, subtract
                 intervals from notes, and add or subtract intervals from one another.
-                These operations are not vague metaphors: music theory gives precise
-                answers.
+                These operations have clear and consistent, well-defined answers in music theory.
               </p>
               <p>
                 For example, <code>IIImin + IIImin = Vdim</code>, while{" "}
@@ -337,7 +336,13 @@ function App() {
             </form>
           </section>
         </div>
-
+        <p className="feedback-block">
+          Suggestions, corrections, or ideas are very welcome.
+          <br />
+          <a href="mailto:feedback@naadalab.com?subject=Microtonal Tuner Feedback">
+            Send feedback
+          </a>
+        </p>
       </section>
     </main>
   );

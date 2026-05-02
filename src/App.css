@@ -212,12 +212,38 @@ button {
 }
 
 @media (max-width: 420px) {
+  .app-shell {
+    padding: 10px;
+  }
+
+  .calculator-card {
+    padding: 14px;
+  }
+
   .expression-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
   }
 
   .numeric-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .numeric-row > div:not(.numeric-op) {
+    padding: 10px 8px;
+  }
+
+  .numeric-row span {
+    font-size: 0.68rem;
+  }
+
+  .numeric-row strong {
+    font-size: 0.88rem;
+  }
+
+  .numeric-op {
+    font-size: 0.95rem;
   }
 }
 
@@ -310,4 +336,8 @@ code {
 
 .landing-sections details[open] summary {
   margin-bottom: 0.8rem;
+}
+
+.feedback-block {
+  margin-top: 28px;
 }
