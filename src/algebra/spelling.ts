@@ -33,34 +33,49 @@ export function letter(value: number): Letter {
   return lettersByFifthDegree[fifthDegree(value)];
 }
 
-// function naturalPitchClass(l: Letter): number {
-//   switch (l) {
-//     case "C": return 0;
-//     case "D": return 2;
-//     case "E": return 4;
-//     case "F": return 5;
-//     case "G": return 7;
-//     case "A": return 9;
-//     case "B": return 11;
-//   }
-// }
-
-// function centeredMod12Accidental(x: number): number {
-//   return positiveMod(x + 6, 12) - 6;
-// }
-
-export function accidental(value: number): number {
+function spellingParts(value: number): {
+  letter: Letter;
+  accidental: number;
+  octave: number;
+} {
   const l = letter(value);
-  const oct = octaveMod48(value);
+  const centeredValue = centeredMod(value, PERIOD);
 
-  const natural = normalize(naturalValueAtOctave0(l) + oct * OCTAVE);
-  const diff = centeredMod(normalize(value) - natural, PERIOD);
+  let best:
+    | { letter: Letter; accidental: number; octave: number }
+    | null = null;
 
-  if (diff % CHROMATIC_SEMITONE_UP !== 0) {
-    return 0;
+  for (let octave = -24; octave <= 72; octave++) {
+    const natural = naturalValueAtOctave0(l) + octave * OCTAVE;
+    const diff = centeredMod(centeredValue - natural, PERIOD);
+
+    if (diff % CHROMATIC_SEMITONE_UP !== 0) {
+      continue;
+    }
+
+    const accidental = diff / CHROMATIC_SEMITONE_UP;
+
+    const candidate = { letter: l, accidental, octave };
+
+    if (
+      best === null ||
+      Math.abs(candidate.accidental) < Math.abs(best.accidental) ||
+      (Math.abs(candidate.accidental) === Math.abs(best.accidental) &&
+        candidate.octave < best.octave)
+    ) {
+      best = candidate;
+    }
   }
 
-  return diff / CHROMATIC_SEMITONE_UP;
+  if (!best) {
+    return { letter: l, accidental: 0, octave: octaveMod48(value) };
+  }
+
+  return best;
+}
+
+export function accidental(value: number): number {
+  return spellingParts(value).accidental;
 }
 
 export function accidentalString(a: number): string {
@@ -93,8 +108,8 @@ export function valueFromSpelling(
 }
 
 export function noteName(value: number): string {
-  const l = letter(value);
-  return `${l}${accidentalString(accidental(value))}${octaveMod48(value)}`;
+  const s = spellingParts(value);
+  return `${s.letter}${accidentalString(s.accidental)}${s.octave}`;
 }
 
 export function intervalName(value: number): string {
